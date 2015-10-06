@@ -89,7 +89,7 @@ class AuthTokenDriver {
    * @return bool|AuthToken
    */
   public function create(UserInterface $user) {
-    $this->tokens->purge($user);
+    //$this->tokens->purge($user);
     return $this->tokens->create($user);
   }
 
