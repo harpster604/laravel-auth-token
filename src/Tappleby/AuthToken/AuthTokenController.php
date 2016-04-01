@@ -101,7 +101,8 @@ class AuthTokenController extends Controller {
       throw new NotAuthorizedException();
     }
 
-    $this->driver->getProvider()->purge($user);
+    $this->driver->getProvider()->purge($payload);
+    //$this->driver->getProvider()->purge($user);
 	  $this->events->fire('auth.token.deleted', array($user));
 
     return Response::json(array('success' => true));
