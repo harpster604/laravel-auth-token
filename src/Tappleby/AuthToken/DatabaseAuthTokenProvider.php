@@ -105,10 +105,31 @@ class DatabaseAuthTokenProvider extends AbstractAuthTokenProvider {
   }
 
   /**
-   * @param mixed|\Illuminate\Auth\UserInterface $identifier
+   * @param UserInterface|mixed $serializedAuthToken
    * @return bool
    */
-  public function purge($identifier)
+  public function purge($serializedAuthToken)
+  {
+    $authToken = $this->deserializeToken($serializedAuthToken);
+
+    if($authToken == null) {
+      return false;
+    }
+
+    if(!$this->verifyAuthToken($authToken)) {
+      return false;
+    }
+
+    $res = $this->db()
+        ->where('auth_identifier', $authToken->getAuthIdentifier())
+        ->where('public_key', $authToken->getPublicKey())
+        ->where('private_key', $authToken->getPrivateKey())
+        ->delete();
+
+    return $res > 0;
+  }
+
+  /*public function purge($identifier)
   {
     if($identifier instanceof UserInterface) {
       $identifier = $identifier->getAuthIdentifier();
@@ -117,5 +138,5 @@ class DatabaseAuthTokenProvider extends AbstractAuthTokenProvider {
     $res = $this->db()->where('auth_identifier', $identifier)->delete();
 
     return $res > 0;
-  }
+  }*/
 }
