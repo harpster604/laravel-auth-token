@@ -58,6 +58,8 @@ class AuthTokenController extends Controller {
     if(!$user) {
       throw new NotAuthorizedException();
     }
+    
+    $this->events->fire('auth.token.validated', array($user));
 
     return Response::json($user);
   }
