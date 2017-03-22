@@ -7,7 +7,7 @@
 
 namespace Tappleby\AuthToken;
 
-use \Illuminate\Auth\UserInterface;
+use \Illuminate\Contracts\Auth\Authenticatable;
 use \Illuminate\Database\Connection;
 use Illuminate\Encryption\Encrypter;
 
@@ -51,10 +51,10 @@ class DatabaseAuthTokenProvider extends AbstractAuthTokenProvider {
   /**
    * Creates an auth token for user.
    *
-   * @param \Illuminate\Auth\UserInterface $user
+   * @param \Illuminate\Contracts\Auth\Authenticatable $user
    * @return \TAppleby\AuthToken\AuthToken|false
    */
-  public function create(UserInterface $user)
+  public function create(Authenticatable $user)
   {
     if($user == null || $user->getAuthIdentifier() == null) {
       return false;
@@ -104,34 +104,36 @@ class DatabaseAuthTokenProvider extends AbstractAuthTokenProvider {
     return $authToken;
   }
 
+
+    /**
+     * @param UserInterface|mixed $serializedAuthToken
+     * @return bool
+     */
+    public function purge($serializedAuthToken)
+    {
+        $authToken = $this->deserializeToken($serializedAuthToken);
+        if($authToken == null) {
+            return false;
+        }
+        if(!$this->verifyAuthToken($authToken)) {
+            return false;
+        }
+        $res = $this->db()
+            ->where('auth_identifier', $authToken->getAuthIdentifier())
+            ->where('public_key', $authToken->getPublicKey())
+            ->where('private_key', $authToken->getPrivateKey())
+            ->delete();
+        return $res > 0;
+    }
+
   /**
-   * @param UserInterface|mixed $serializedAuthToken
+   * @param mixed|\Illuminate\Contracts\Auth\Authenticatable $identifier
    * @return bool
    */
-  public function purge($serializedAuthToken)
+  /*
+  public function purge($identifier)
   {
-    $authToken = $this->deserializeToken($serializedAuthToken);
-
-    if($authToken == null) {
-      return false;
-    }
-
-    if(!$this->verifyAuthToken($authToken)) {
-      return false;
-    }
-
-    $res = $this->db()
-        ->where('auth_identifier', $authToken->getAuthIdentifier())
-        ->where('public_key', $authToken->getPublicKey())
-        ->where('private_key', $authToken->getPrivateKey())
-        ->delete();
-
-    return $res > 0;
-  }
-
-  /*public function purge($identifier)
-  {
-    if($identifier instanceof UserInterface) {
+    if($identifier instanceof Authenticatable) {
       $identifier = $identifier->getAuthIdentifier();
     }
 

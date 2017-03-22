@@ -7,8 +7,8 @@
 
 namespace Tappleby\AuthToken;
 
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\UserProviderInterface;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\UserProvider;
 use Tappleby\AuthToken\Exceptions\NotAuthorizedException;
 
 class AuthTokenDriver {
@@ -18,11 +18,11 @@ class AuthTokenDriver {
   protected $tokens;
 
   /**
-   * @var \Illuminate\Auth\UserProviderInterface
+   * @var Illuminate\Contracts\Auth\UserProvider
    */
   protected $users;
 
-  function __construct(AuthTokenProviderInterface $tokens, UserProviderInterface $users)
+  function __construct(AuthTokenProviderInterface $tokens, UserProvider $users)
   {
     $this->tokens = $tokens;
     $this->users = $users;
@@ -43,7 +43,7 @@ class AuthTokenDriver {
    * Validates a public auth token. Returns User object on success, otherwise false.
    *
    * @param $authTokenPayload
-   * @return bool|UserInterface
+   * @return bool|Authenticatable
    */
   public function validate($authTokenPayload) {
 
@@ -75,7 +75,7 @@ class AuthTokenDriver {
   public function attempt(array $credentials) {
     $user = $this->users->retrieveByCredentials($credentials);
 
-    if($user instanceof UserInterface && $this->users->validateCredentials($user, $credentials)) {
+    if($user instanceof Authenticatable && $this->users->validateCredentials($user, $credentials)) {
        return $this->create($user);
     }
 
@@ -85,11 +85,10 @@ class AuthTokenDriver {
   /**
    * Create auth token for user.
    *
-   * @param UserInterface $user
+   * @param Authenticatable $user
    * @return bool|AuthToken
    */
-  public function create(UserInterface $user) {
-    //$this->tokens->purge($user);
+  public function create(Authenticatable $user) {
     return $this->tokens->create($user);
   }
 
@@ -97,7 +96,7 @@ class AuthTokenDriver {
    * Retrive user from auth token.
    *
    * @param AuthToken $token
-   * @return UserInterface|null
+   * @return Authenticatable|null
    */
   public function user(AuthToken $token) {
     return $this->users->retrieveByID( $token->getAuthIdentifier() );

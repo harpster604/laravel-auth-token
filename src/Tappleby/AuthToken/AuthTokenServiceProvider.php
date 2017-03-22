@@ -14,7 +14,16 @@ class AuthTokenServiceProvider extends ServiceProvider
 
 	public function boot()
 	{
-		$this->package('tappleby/laravel-auth-token');
+		// Publish a config file
+		$this->publishes([
+		    __DIR__.'/../../config/config.php' => config_path('authtoken.php')
+		], 'config');
+
+		// Publish your migrations
+		$this->publishes([
+		    __DIR__.'/../../migrations/' => database_path('/migrations')
+		], 'migrations');
+
 		$this->app['router']->filter('auth.token', 'tappleby.auth.token.filter');
 	}
 

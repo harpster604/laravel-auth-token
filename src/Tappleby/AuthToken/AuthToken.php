@@ -7,10 +7,9 @@
 
 namespace Tappleby\AuthToken;
 
+use Illuminate\Contracts\Support\Arrayable;
 
-use Illuminate\Support\Contracts\ArrayableInterface;
-
-class AuthToken implements ArrayableInterface {
+class AuthToken implements Arrayable {
 
 
   protected $authIdentifier;

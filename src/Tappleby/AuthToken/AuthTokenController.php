@@ -58,7 +58,7 @@ class AuthTokenController extends Controller {
     if(!$user) {
       throw new NotAuthorizedException();
     }
-    
+
     $this->events->fire('auth.token.validated', array($user));
 
     return Response::json($user);
@@ -91,8 +91,7 @@ class AuthTokenController extends Controller {
 
 
 	  //return Response::json(array('token' => $serializedToken, 'user' => $user->toArray()));
-	  return Response::json(array('token' => $serializedToken, 'user' => $user->toArray()))->header('X-Auth-Token', $serializedToken);
-
+      return Response::json(array('token' => $serializedToken, 'user' => $user->toArray()))->header('X-Auth-Token', $serializedToken);
   }
 
   public function destroy() {
@@ -104,7 +103,6 @@ class AuthTokenController extends Controller {
     }
 
     $this->driver->getProvider()->purge($payload);
-    //$this->driver->getProvider()->purge($user);
 	  $this->events->fire('auth.token.deleted', array($user));
 
     return Response::json(array('success' => true));

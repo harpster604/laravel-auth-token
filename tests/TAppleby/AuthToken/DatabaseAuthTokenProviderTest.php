@@ -34,7 +34,7 @@ class DatabaseAuthTokenProviderTest extends PHPUnit_Framework_TestCase {
   public function testCreateAuthTokenInvalidUser()
   {
     $enc =  m::mock('Illuminate\Encryption\Encrypter');
-    $user = m::mock('Illuminate\Auth\UserInterface');
+    $user = m::mock('Illuminate\Contracts\Auth\Authenticatable');
     $user->shouldReceive('getAuthIdentifier')->once()->andReturnNull();
 
     $provider = $this->getProvider( $enc );
@@ -47,7 +47,7 @@ class DatabaseAuthTokenProviderTest extends PHPUnit_Framework_TestCase {
   public function testCreateAuthToken()
   {
     $enc =  m::mock('Illuminate\Encryption\Encrypter');
-    $user = m::mock('Illuminate\Auth\UserInterface');
+    $user = m::mock('Illuminate\Contracts\Auth\Authenticatable');
     $user->shouldReceive('getAuthIdentifier')->twice()->andReturn("foo");
 
     $provider = $this->getProvider( $enc );
@@ -159,7 +159,7 @@ class DatabaseAuthTokenProviderTest extends PHPUnit_Framework_TestCase {
 
   public function testPurgeGetsIdentifierFromUser() {
     $enc =  m::mock('Illuminate\Encryption\Encrypter');
-    $user = m::mock('Illuminate\Auth\UserInterface');
+    $user = m::mock('Illuminate\Contracts\Auth\Authenticatable');
     $user->shouldReceive('getAuthIdentifier')->once()->andReturn(1);
 
     $provider = $this->getProvider( $enc );

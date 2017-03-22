@@ -15,7 +15,7 @@ class AuthTokenFilterTest extends PHPUnit_Framework_TestCase {
   }
 
   public function setUp() {
-    m::mock('Illuminate\Auth\UserInterface');
+    m::mock('Illuminate\Contracts\Auth\Authenticatable');
   }
 
   public function testFilterValidateFailsFiresNotAuthorizedException() {
