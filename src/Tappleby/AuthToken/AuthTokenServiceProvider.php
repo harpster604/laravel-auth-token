@@ -37,11 +37,11 @@ class AuthTokenServiceProvider extends ServiceProvider
 	{
 		$app = $this->app;
 
-		$app->bindShared('tappleby.auth.token', function ($app) {
+		$app->singleton('tappleby.auth.token', function ($app) {
 			return new AuthTokenManager($app);
 		});
 
-		$app->bindShared('tappleby.auth.token.filter', function ($app) {
+		$app->singleton('tappleby.auth.token.filter', function ($app) {
 			$driver = $app['tappleby.auth.token']->driver();
       $events = $app['events'];
 
