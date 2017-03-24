@@ -9,7 +9,7 @@ namespace Tappleby\AuthToken;
 
 use \Illuminate\Contracts\Auth\Authenticatable;
 use \Illuminate\Database\Connection;
-use \Illuminate\Encryption\McryptEncrypter;
+use \Illuminate\Encryption\Encrypter;
 
 class DatabaseAuthTokenProvider extends AbstractAuthTokenProvider {
 
@@ -26,7 +26,7 @@ class DatabaseAuthTokenProvider extends AbstractAuthTokenProvider {
    * @param \Illuminate\Encryption\Encrypter $encrypter
    * @param \Tappleby\AuthToken\HashProvider $hasher
    */
-  function __construct(Connection $conn, $table, McryptEncrypter $encrypter, HashProvider $hasher)
+  function __construct(Connection $conn, $table, Encrypter $encrypter, HashProvider $hasher)
   {
     parent::__construct($encrypter, $hasher);
     $this->table = $table;

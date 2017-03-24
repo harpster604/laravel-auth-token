@@ -9,7 +9,7 @@ namespace Tappleby\AuthToken;
 
 
 use Illuminate\Encryption\DecryptException;
-use Illuminate\Encryption\McryptEncrypter;
+use Illuminate\Encryption\Encrypter;
 
 abstract class AbstractAuthTokenProvider implements AuthTokenProviderInterface {
 
@@ -36,7 +36,7 @@ abstract class AbstractAuthTokenProvider implements AuthTokenProviderInterface {
    * @param Encrypter $encrypter
    * @param HashProvider $hasher
    */
-  function __construct(McryptEncrypter $encrypter, HashProvider $hasher)
+  function __construct(Encrypter $encrypter, HashProvider $hasher)
   {
     $this->encrypter = $encrypter;
     $this->hasher = $hasher;
