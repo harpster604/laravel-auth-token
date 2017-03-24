@@ -24,7 +24,7 @@ class AuthTokenServiceProvider extends ServiceProvider
 		    __DIR__.'/../../migrations/' => database_path('/migrations')
 		], 'migrations');
 
-		$this->app['router']->filter('auth.token', 'tappleby.auth.token.filter');
+		//$this->app['router']->filter('auth.token', 'tappleby.auth.token.filter');
 	}
 
 
