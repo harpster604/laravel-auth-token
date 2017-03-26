@@ -47,20 +47,9 @@ class HashProvider {
   }
 
   public function generateEntropy() {
-    $entropy = mcrypt_create_iv(32, $this->getRandomizer());
+    $entropy = openssl_random_pseudo_bytes(32);
     $entropy .= uniqid(mt_rand(), true);
 
     return $entropy;
-  }
-
-  protected function getRandomizer()
-  {
-    if (defined('MCRYPT_DEV_URANDOM')) return MCRYPT_DEV_URANDOM;
-
-    if (defined('MCRYPT_DEV_RANDOM')) return MCRYPT_DEV_RANDOM;
-
-    mt_srand();
-
-    return MCRYPT_RAND;
   }
 }
